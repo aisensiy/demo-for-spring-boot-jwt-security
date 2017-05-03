@@ -4,6 +4,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.SignatureException;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -13,12 +14,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
-@NoArgsConstructor
 public class JwtTokenUtil implements Serializable {
-    @Value("${jwt.secret}")
     private String secret;
 
-    public JwtTokenUtil(String secret) {
+    @Autowired
+    public JwtTokenUtil(@Value("${jwt.secret}") String secret) {
         this.secret = secret;
     }
 
@@ -41,6 +41,6 @@ public class JwtTokenUtil implements Serializable {
             put("email", jwtUser.getEmail());
         }};
 
-        return Jwts.builder().setClaims(claims).signWith(SignatureAlgorithm.HS512, secret).compact();
+        return Jwts.builder().setClaims(claims).signWith(SignatureAlgorithm.HS512, secret.getBytes()).compact();
     }
 }

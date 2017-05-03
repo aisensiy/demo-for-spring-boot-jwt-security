@@ -1,16 +1,12 @@
 package com.example.api.security;
 
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.NotBlank;
 
 @Data
-@NoArgsConstructor
 public class JwtAuthenticationRequest {
+    @NotBlank
     private String username;
+    @NotBlank
     private String password;
-
-    public JwtAuthenticationRequest(String username, String password) {
-        this.username = username;
-        this.password = password;
-    }
 }

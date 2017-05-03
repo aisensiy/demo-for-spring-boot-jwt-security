@@ -12,4 +12,9 @@ public class BCryptService implements EncryptService {
     public String encrypt(String password) {
         return encoder.encode(password);
     }
+
+    @Override
+    public boolean check(String password, String encrypedPassword) {
+        return encoder.matches(password, encrypedPassword);
+    }
 }
