@@ -1,10 +1,10 @@
 package com.example.api.security;
 
-import com.example.api.AuthApi;
-import com.example.domain.EncryptService;
-import com.example.domain.User;
-import com.example.domain.UserRepository;
+import com.example.domain.user.EncryptService;
+import com.example.domain.user.User;
+import com.example.domain.user.UserRepository;
 import com.example.infrastructure.service.BCryptService;
+import com.example.service.JwtService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,7 +22,7 @@ import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 public class AuthApiTest {
-    private JwtTokenUtil jwtTokenUtil = new JwtTokenUtil("123");
+    private JwtService jwtService = new JwtService("123");
     private UserRepository userRepository;
     private EncryptService encryptService = new BCryptService();
 
@@ -35,7 +35,7 @@ public class AuthApiTest {
         user = new User("123", "aisensiy", "aisensiy@163.com", encryptService.encrypt("123"));
         userRepository = mock(UserRepository.class);
         when(userRepository.getUserByUserName(eq("aisensiy"))).thenReturn(Optional.of(user));
-        authApi = new AuthApi(encryptService, userRepository, jwtTokenUtil);
+        authApi = new AuthApi(encryptService, userRepository, jwtService);
     }
 
     @Test

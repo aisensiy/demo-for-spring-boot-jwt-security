@@ -1,6 +1,6 @@
 package com.example.infrastructure.service;
 
-import com.example.domain.EncryptService;
+import com.example.domain.user.EncryptService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +14,7 @@ public class BCryptService implements EncryptService {
     }
 
     @Override
-    public boolean check(String password, String encrypedPassword) {
-        return encoder.matches(password, encrypedPassword);
+    public boolean check(String password, String encryptedPassword) {
+        return encoder.matches(password, encryptedPassword);
     }
 }

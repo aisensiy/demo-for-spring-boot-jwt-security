@@ -1,5 +1,6 @@
 package com.example.api.security;
 
+import com.example.api.security.JwtTokenFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.Http401AuthenticationEntryPoint;
 import org.springframework.context.annotation.Bean;
@@ -16,8 +17,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-    @Autowired
-    private UserDetailsService userDetailsService;
 
     @Bean
     public JwtTokenFilter jwtTokenFilter() {
@@ -35,10 +34,5 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .anyRequest().authenticated();
 
         http.addFilterBefore(jwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
-    }
-
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService).passwordEncoder(new BCryptPasswordEncoder());
     }
 }

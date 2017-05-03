@@ -1,41 +1,41 @@
 package com.example.api.security;
 
+import com.example.domain.user.User;
+import com.example.domain.user.UserRepository;
+import com.example.service.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Collections;
 
 public class JwtTokenFilter extends OncePerRequestFilter {
     @Autowired
-    private UserDetailsService userDetailsService;
-
-    private String header = "Authorization";
+    private UserRepository userRepository;
 
     @Autowired
-    private JwtTokenUtil jwtTokenUtil;
+    private JwtService jwtService;
+
+    private String header = "Authorization";
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String authToken = request.getHeader(header);
-        String username = jwtTokenUtil.getUsername(authToken);
+        String username = jwtService.getUsername(authToken);
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+            User user = userRepository.getUserByUserName(username).get();
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                userDetails,
+                user,
                 null,
-                userDetails.getAuthorities()
+                Collections.emptyList()
             );
             authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);

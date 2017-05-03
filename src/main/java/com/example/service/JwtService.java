@@ -1,12 +1,11 @@
-package com.example.api.security;
+package com.example.service;
 
+import com.example.domain.user.User;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.SignatureException;
-import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
@@ -14,11 +13,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
-public class JwtTokenUtil implements Serializable {
+public class JwtService {
     private String secret;
 
     @Autowired
-    public JwtTokenUtil(@Value("${jwt.secret}") String secret) {
+    public JwtService(@Value("${jwt.secret}") String secret) {
         this.secret = secret;
     }
 
@@ -34,11 +33,11 @@ public class JwtTokenUtil implements Serializable {
         }
     }
 
-    public String generateToken(JwtUser jwtUser) {
+    public String generateToken(User user) {
         Map<String, Object> claims = new HashMap<String, Object>() {{
-            put("sub", jwtUser.getUsername());
-            put("id", jwtUser.getId());
-            put("email", jwtUser.getEmail());
+            put("sub", user.getUsername());
+            put("id", user.getId());
+            put("email", user.getEmail());
         }};
 
         return Jwts.builder().setClaims(claims).signWith(SignatureAlgorithm.HS512, secret.getBytes()).compact();
